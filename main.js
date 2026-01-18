@@ -50,12 +50,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // 4. Smooth Scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    // 4. Smooth Scroll & Meta Pixel Tracking
+    document.querySelectorAll('a[href^="#"], .btn-cta').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) target.scrollIntoView({ behavior: 'smooth' });
+            // Track Meta Pixel Event
+            if (typeof fbq === 'function') {
+                fbq('track', 'InitiateCheckout');
+                console.log('Pixel: InitiateCheckout tracked');
+            }
+
+            if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            }
         });
     });
 
